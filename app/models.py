@@ -51,9 +51,9 @@ class Todo(SQLModel, table=True):
         self.done = not self.done
     # Task 5.2 code should go here
 
-    class Category(SQLModel, table=True):
+class Category(SQLModel, table=True):
      # Implementation of the Category model from task 5.1 here
-      id: Optional[int] =  Field(default=None, primary_key=True)
+    id: Optional[int] =  Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key='user.id') #set user_id as a foreign key to user.id 
     text: str = Field(max_length=255)
 
