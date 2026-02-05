@@ -10,11 +10,6 @@ class User(SQLModel, table=True):
     email:str = Field(index=True, unique=True)
     password:str
 
-    id: Optional[int] =  Field(default=None, primary_key=True)
-    username:str = Field(index=True, unique=True)
-    email:str = Field(index=True, unique=True)
-    password:str
-
     ## Task 3.1 code should go here (special care should go into the indentation)
     todos: list['Todo'] = Relationship(back_populates="user")
     ## End of task 3.1 code
@@ -27,8 +22,8 @@ class User(SQLModel, table=True):
 
 class TodoCategory(SQLModel, table=True):
      # Implementation of the TodoCategory model from task 5.1 here
-       todo_id: int|None = Field(primary_key=True, foreign_key='todo.id')
-       category_id: int|None = Field(primary_key=True, foreign_key='category.id')
+    todo_id: int|None = Field(primary_key=True, foreign_key='todo.id')
+    category_id: int|None = Field(primary_key=True, foreign_key='category.id')
     
 
 
@@ -40,15 +35,15 @@ class Todo(SQLModel, table=True):
     done: bool = Field(default=False)
     # done: bool = False  # <---- can also be written this way if you prefer a pythonic default
     
-    categories: list['Category'] = Relationship(back_populates=("todos"), link_model=TodoCategory)
+   
     def toggle(self):
         self.done = not self.done
 
     ## Task 3.2 implementation should go here as well. Modify the class like you did for 3.1 above
     user: User = Relationship(back_populates="todos")
+    categories: list['Category'] = Relationship(back_populates=("todos"), link_model=TodoCategory)
     ## Task 3.4 implementation should go here as well
-    def toggle(self):
-        self.done = not self.done
+  
     # Task 5.2 code should go here
 
 class Category(SQLModel, table=True):
