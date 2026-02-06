@@ -133,15 +133,18 @@ def assign_category_to_todo(username:str, todo_id:int, category_text:str):
 
 
 @cli.command()
-def list_todo_data(id:int,user_id:int,text:str, done:bool):
+def list_todo_data():
     # Task 5.3 code here. Remove the line with "pass" below once completed
     with get_session() as db: # Get a connection to the database
        todos=db.exec(select(Todo)).all()
-    for todo in todos:
-        print(todo.id,todo.user_id,todo.text,todo.done)
+       if not todos:
+           print("No data")
+           return
+       for todo in todos:
+           print(f"ID: {todo.id}," f"Text: {todo.text}," f"Username: {todo.user.username}," f"Done: {todo.done}," )
 
 @cli.command()
-def delete_todo(id: int):
+def delete_todo(id: int): 
     with get_session() as db:
         todo = db.exec(select(Todo).where(Todo.id == id)).one_or_none()
         if not todo:
@@ -153,23 +156,26 @@ def delete_todo(id: int):
 
 
 @cli.command()
-def toggle_todo_done(todo_id:int, user_id:int):
-    # Task 4.2 code here. Remove the line with "pass" below once completed
+def toggle_todo_done(user_id:int):
+   
      with get_session() as db:
-        todo=db.exec(select(Todo).where(Todo.id==todo_id, Todo.user_id==user_id)).one_or_none()
+        user=db.exec(select(User).where(User.id==user_id)).one_or_none()
        
-        if not todo:
-                print("This todo doesn't exist")
-                return
-        if todo.user.user_id != user_id:
-            print(f"Todo {todo.id} does not match {todo.user_id}")
+        if not user:
+            print("This user doesn't exist")
+            return
+        
+        todos=db.exec(select(Todo).where(Todo.user_id==User.id)).all()
+        if not todos:
+            print(f"No chores was found for the user of id:{user_id}")
             return
 
-        todo.toggle()
-        db.add(todo)
+        for todo in todos:
+            todo.done=True
+            db.add(todo)
         db.commit()
 
-        print(f"Todo item's done state set to {todo.done}")
+        print(f"Todo items for the user {user_id} is set to completed")
         
 if __name__ == "__main__":
     cli()
