@@ -131,10 +131,10 @@ def assign_category_to_todo(username:str, todo_id:int, category_text:str):
         db.commit()
         print("Added category to todo")
 
-
+#Exercise 1
 @cli.command()
 def list_todo_data():
-    # Task 5.3 code here. Remove the line with "pass" below once completed
+   
     with get_session() as db: # Get a connection to the database
        todos=db.exec(select(Todo)).all()
        if not todos:
@@ -143,6 +143,7 @@ def list_todo_data():
        for todo in todos:
            print(f"ID: {todo.id}," f"Text: {todo.text}," f"Username: {todo.user.username}," f"Done: {todo.done}," )
 
+#Excercise 2
 @cli.command()
 def delete_todo(id: int): 
     with get_session() as db:
@@ -154,7 +155,7 @@ def delete_todo(id: int):
         db.commit()
         print(f'{id} deleted')
 
-
+#Exercise 3
 @cli.command()
 def toggle_todo_done(user_id:int):
    
